@@ -7,6 +7,8 @@ var MIN_AVATAR_NUMBER = 1;
 var MAX_AVATAR_NUMBER = 6;
 var MIN_COMMENTS_NUMBER = 1;
 var MAX_COMMENTS_NUMBER = 10;
+var COMMENT_AVATAR_WIDTH = 35;
+var COMMENT_AVATAR_HEIGHT = 35;
 var pictures = [];
 
 var picturesDescriptions = [
@@ -103,4 +105,60 @@ var renderUserPosts = function (picturesData) {
   picturesContainer.appendChild(fragment);
 };
 
-renderUserPosts(getPicturesData());
+var usersPosts = getPicturesData();
+
+renderUserPosts(usersPosts);
+
+var getHtmlElement = function (tag, className) {
+  var htmlElement = document.createElement(tag);
+  htmlElement.classList.add(className);
+
+  return htmlElement;
+};
+
+var getComment = function (userComment) {
+  var newComment = getHtmlElement('li', 'social__comment');
+
+  var newCommentAvatar = getHtmlElement('img', 'social__picture');
+  newCommentAvatar.src = userComment.avatar;
+  newCommentAvatar.alt = userComment.name;
+  newCommentAvatar.width = COMMENT_AVATAR_WIDTH;
+  newCommentAvatar.height = COMMENT_AVATAR_HEIGHT;
+
+  newComment.appendChild(newCommentAvatar);
+
+  var newCommentText = getHtmlElement('p', 'social__text');
+  newCommentText.textContent = userComment.message;
+
+  newComment.appendChild(newCommentText);
+
+  return newComment;
+};
+
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
+var likesCount = bigPicture.querySelector('.likes-count');
+var bigPictureDescription = bigPicture.querySelector('.social__caption');
+var commentsCount = bigPicture.querySelector('.social__comment-count');
+var commentsLoader = bigPicture.querySelector('.comments-loader');
+var commentsList = bigPicture.querySelector('.social__comments');
+var body = document.querySelector('body');
+
+var renderBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+
+  bigPictureImg.src = usersPosts[0].url;
+  bigPictureDescription.textContent = usersPosts[0].description;
+  likesCount.textContent = usersPosts[0].likes;
+  commentsCount.textContent = usersPosts[0].comments.length;
+
+  for (var i = 0; i < usersPosts[0].comments.length; i++) {
+    commentsList.appendChild(getComment(usersPosts[0].comments[i]));
+  }
+};
+
+commentsLoader.classList.add('hidden');
+commentsCount.classList.add('hidden');
+
+renderBigPicture();
+body.classList.add('modal-open');
