@@ -116,30 +116,31 @@ var getHtmlElement = function (tag, className) {
   return htmlElement;
 };
 
-var getComment = function (name, avatarSrc, text) {
-  var comment = getHtmlElement('li', 'social__comment');
+var getComment = function (userComment) {
+  var newComment = getHtmlElement('li', 'social__comment');
 
-  var commentAvatar = getHtmlElement('img', 'social__picture');
-  commentAvatar.src = avatarSrc;
-  commentAvatar.alt = name;
-  commentAvatar.width = COMMENT_AVATAR_WIDTH;
-  commentAvatar.height = COMMENT_AVATAR_HEIGHT;
+  var newCommentAvatar = getHtmlElement('img', 'social__picture');
+  newCommentAvatar.src = userComment.avatar;
+  newCommentAvatar.alt = userComment.name;
+  newCommentAvatar.width = COMMENT_AVATAR_WIDTH;
+  newCommentAvatar.height = COMMENT_AVATAR_HEIGHT;
 
-  comment.appendChild(commentAvatar);
+  newComment.appendChild(newCommentAvatar);
 
-  var commentText = getHtmlElement('p', 'social__text');
-  commentText.textContent = text;
+  var newCommentText = getHtmlElement('p', 'social__text');
+  newCommentText.textContent = userComment.message;
 
-  comment.appendChild(commentText);
+  newComment.appendChild(newCommentText);
 
-  return comment;
+  return newComment;
 };
 
 var bigPicture = document.querySelector('.big-picture');
 var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
 var likesCount = bigPicture.querySelector('.likes-count');
 var bigPictureDescription = bigPicture.querySelector('.social__caption');
-var commentsCount = bigPicture.querySelector('.comments-count');
+var commentsCount = bigPicture.querySelector('.social__comment-count');
+var commentsLoader = bigPicture.querySelector('.comments-loader');
 var commentsList = bigPicture.querySelector('.social__comments');
 var body = document.querySelector('body');
 
@@ -152,11 +153,11 @@ var renderBigPicture = function () {
   commentsCount.textContent = usersPosts[0].comments.length;
 
   for (var i = 0; i < usersPosts[0].comments.length; i++) {
-    commentsList.appendChild(getComment(usersPosts[0].comments[i].name, usersPosts[0].comments[i].avatar, usersPosts[0].comments[i].message));
+    commentsList.appendChild(getComment(usersPosts[0].comments[i]));
   }
 };
 
-likesCount.classList.add('hidden');
+commentsLoader.classList.add('hidden');
 commentsCount.classList.add('hidden');
 
 renderBigPicture();
