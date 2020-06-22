@@ -203,3 +203,67 @@ imgUploadInput.addEventListener('change', function () {
 imgUploadCancel.addEventListener('click', function () {
   closeUploadOverlay();
 });
+
+//  Редактирование изображения и ограничения, накладываемые на поля
+/*  масштаб
+  н. при открытии формы редактирования навешиваются события масштаба
+  -при нажатии на "+":
+    -мы ловим событие click/keydown = ENTER
+    -должна пройти проверка на максимальное значение = 100%
+      -если scaleInput = 100%, то мы ничего не делаем
+      -иначе мы увеличиваем scaleValue на (константу = 25)
+  -при нажатии на "-":
+    -мы ловим событие click/keydown = ENTER
+    -должна пройти проверка на минимальное значение = 25%
+      -если scaleInput = 25%, то мы ничего не делаем
+      -иначе мы уменьшаем scaleValue на (константу = 25)
+  к. при закрытии формы редактирования отвешиваются события масштаба
+*/
+var scaleContainer = imgUploadContainer.querySelector('.scale');
+var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
+var scaleBigger = scaleContainer.querySelector('.scale__control--bigger');
+var scaleInput = scaleContainer.querySelector('.scale__control--value');
+var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview').querySelector('img');
+
+var changeScaleValue = function (sign) {
+  var scaleValue = scaleInput.value.split('%');
+
+  switch (sign) {
+    case '+':
+      scaleInput.value = parseInt(scaleValue[0], 10) + SCALE_STEP + '%';
+      imgUploadPreview.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + SCALE_STEP) / 100 + ')';
+      break;
+    case '-':
+      scaleInput.value = parseInt(scaleValue[0], 10) - SCALE_STEP + '%';
+      imgUploadPreview.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - SCALE_STEP) / 100 + ')';
+      break;
+  }
+};
+
+scaleBigger.addEventListener('click', function () {
+  if (scaleInput.value !== MAX_SCALE) {
+    changeScaleValue('+');
+  }
+});
+
+scaleBigger.addEventListener('keydown', function (evt) {
+  if (evt.code === 'Enter') {
+    if (scaleInput.value !== MAX_SCALE) {
+      changeScaleValue('+');
+    }
+  }
+});
+
+scaleSmaller.addEventListener('click', function () {
+  if (scaleInput.value !== MIN_SCALE) {
+    changeScaleValue('-');
+  }
+});
+
+scaleSmaller.addEventListener('keydown', function (evt) {
+  if (evt.code === 'Enter') {
+    if (scaleInput.value !== MIN_SCALE) {
+      changeScaleValue('-');
+    }
+  }
+});
