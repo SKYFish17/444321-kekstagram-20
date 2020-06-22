@@ -9,6 +9,9 @@ var MIN_COMMENTS_NUMBER = 1;
 var MAX_COMMENTS_NUMBER = 10;
 var COMMENT_AVATAR_WIDTH = 35;
 var COMMENT_AVATAR_HEIGHT = 35;
+var SCALE_STEP = 25;
+var MIN_SCALE = '25%';
+var MAX_SCALE = '100%';
 var pictures = [];
 
 var picturesDescriptions = [
@@ -162,3 +165,41 @@ commentsCount.classList.add('hidden');
 
 renderBigPicture();
 body.classList.add('modal-open');
+
+//  задание 4
+bigPicture.classList.add('hidden');
+body.classList.remove('modal-open');
+
+// загрузка изображения и показ формы редактирования
+var imgUploadContainer = document.querySelector('.img-upload');
+var imgUploadInput = imgUploadContainer.querySelector('.img-upload__input');
+var imgUploadOverlay = imgUploadContainer.querySelector('.img-upload__overlay');
+var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
+
+var openUploadOverlay = function () {
+  body.classList.add('modal-open');
+  imgUploadOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onUploadOverlayEscPress);
+};
+
+var closeUploadOverlay = function () {
+  body.classList.remove('modal-open');
+  imgUploadOverlay.classList.add('hidden');
+  imgUploadInput.value = '';
+  document.removeEventListener('keydown', onUploadOverlayEscPress);
+};
+
+var onUploadOverlayEscPress = function (evt) {
+  if (evt.code === 'Escape') {
+    evt.preventDefault();
+    closeUploadOverlay();
+  }
+};
+
+imgUploadInput.addEventListener('change', function () {
+  openUploadOverlay();
+});
+
+imgUploadCancel.addEventListener('click', function () {
+  closeUploadOverlay();
+});
