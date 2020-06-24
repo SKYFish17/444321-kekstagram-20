@@ -12,6 +12,8 @@ var COMMENT_AVATAR_HEIGHT = 35;
 var SCALE_STEP = 25;
 var MIN_SCALE = '25%';
 var MAX_SCALE = '100%';
+var MAX_PERCENT = 100;
+var MAX_PIN_POSITION = 495;
 var pictures = [];
 
 var picturesDescriptions = [
@@ -179,14 +181,38 @@ var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
 var openUploadOverlay = function () {
   body.classList.add('modal-open');
   imgUploadOverlay.classList.remove('hidden');
+
   document.addEventListener('keydown', onUploadOverlayEscPress);
+
+  scaleBigger.addEventListener('click', onScaleBiggerClick);
+  //  scaleBigger.addEventListener('keydown', onScaleBiggerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+
+  scaleSmaller.addEventListener('click', onScaleSmallerClick);
+  //  scaleSmaller.addEventListener('keydown', onScaleSmallerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  effectsList.addEventListener('change', onEffectsItemClick);
+
+  effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
+
+  if (effectsPreviewNone.checked) {
+    effectSlider.classList.add('hidden');
+  }
 };
 
 var closeUploadOverlay = function () {
   body.classList.remove('modal-open');
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
+
   document.removeEventListener('keydown', onUploadOverlayEscPress);
+
+  scaleBigger.removeEventListener('click', onScaleBiggerClick);
+  //  scaleBigger.removeEventListener('keydown', onScaleBiggerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+
+  scaleSmaller.removeEventListener('click', onScaleSmallerClick);
+  //  scaleSmaller.removeEventListener('keydown', onScaleSmallerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  effectsList.removeEventListener('change', onEffectsItemClick);
+
+  effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
 };
 
 var onUploadOverlayEscPress = function (evt) {
@@ -204,21 +230,7 @@ imgUploadCancel.addEventListener('click', function () {
   closeUploadOverlay();
 });
 
-//  Редактирование изображения и ограничения, накладываемые на поля
-/*  масштаб
-  н. при открытии формы редактирования навешиваются события масштаба
-  -при нажатии на "+":
-    -мы ловим событие click/keydown = ENTER
-    -должна пройти проверка на максимальное значение = 100%
-      -если scaleInput = 100%, то мы ничего не делаем
-      -иначе мы увеличиваем scaleValue на (константу = 25)
-  -при нажатии на "-":
-    -мы ловим событие click/keydown = ENTER
-    -должна пройти проверка на минимальное значение = 25%
-      -если scaleInput = 25%, то мы ничего не делаем
-      -иначе мы уменьшаем scaleValue на (константу = 25)
-  к. при закрытии формы редактирования отвешиваются события масштаба
-*/
+//  масштабирование изображения
 var scaleContainer = imgUploadContainer.querySelector('.scale');
 var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
 var scaleBigger = scaleContainer.querySelector('.scale__control--bigger');
@@ -240,30 +252,131 @@ var changeScaleValue = function (sign) {
   }
 };
 
-scaleBigger.addEventListener('click', function () {
+var onScaleBiggerClick = function () {
   if (scaleInput.value !== MAX_SCALE) {
     changeScaleValue('+');
   }
-});
+};
 
-scaleBigger.addEventListener('keydown', function (evt) {
+/*  это button, обработка по Enter не нужна. Или лучше оставить?
+var onScaleBiggerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
     if (scaleInput.value !== MAX_SCALE) {
       changeScaleValue('+');
     }
   }
-});
+};
+*/
 
-scaleSmaller.addEventListener('click', function () {
+var onScaleSmallerClick = function () {
   if (scaleInput.value !== MIN_SCALE) {
     changeScaleValue('-');
   }
-});
+};
 
-scaleSmaller.addEventListener('keydown', function (evt) {
+/*  это button, обработка по Enter не нужна. Или лучше оставить?
+var onScaleSmallerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
     if (scaleInput.value !== MIN_SCALE) {
       changeScaleValue('-');
     }
   }
-});
+};
+*/
+
+//  Наложение эффекта на изображение
+var effectsList = imgUploadOverlay.querySelector('.effects__list');
+var effectSlider = imgUploadOverlay.querySelector('.effect-level');
+var effectsPreviewNone = effectsList.querySelector('#effect-none');
+var previousEffectName = '';
+
+var onEffectsItemClick = function (evt) {
+  var effectLabel = evt.target.nextElementSibling.querySelector('.effects__preview');
+  var effectName = effectLabel.classList[1];
+
+  if (previousEffectName) {
+    imgUploadPreview.classList.remove(previousEffectName);
+  }
+
+  if (effectName === 'effects__preview--none') {
+    effectSlider.classList.add('hidden');
+  } else {
+    effectSlider.classList.remove('hidden');
+  }
+
+  previousEffectName = effectName;
+  imgUploadPreview.classList.add(effectName);
+  changeEffectLevel(MAX_PIN_POSITION);
+};
+
+// фильтры
+var effectLevelContainer = imgUploadOverlay.querySelector('.effect-level');
+var effectLevelPin = effectLevelContainer.querySelector('.effect-level__pin');
+var effectLevelDepth = effectLevelContainer.querySelector('.effect-level__depth');
+var effectLevelValue = effectLevelContainer.querySelector('.effect-level__value');
+
+var testPinPosition = 150;//  убрать после полной реализации обработки соб. слайдера
+
+var getFilter = function (effectType, effectMinLevel, effectMaxLevel, unit, pinPosition) {
+  var effectLevel;
+  var filter;
+  var effectLevelDifference = effectMaxLevel - effectMinLevel;
+
+  effectLevel = effectMinLevel + pinPosition / MAX_PIN_POSITION * effectLevelDifference;
+
+  if (unit !== 'none') {
+    filter = effectType + '(' + effectLevel + unit + ')';
+  } else {
+    filter = effectType + '(' + effectLevel + ')';
+  }
+
+  return filter;
+};
+
+var getRatio = function (numberOne, numberTwo, sign) {
+  var ratio;
+
+  if (sign) {
+    ratio = numberOne / numberTwo * MAX_PERCENT + sign;
+  } else {
+    ratio = numberOne / numberTwo * MAX_PERCENT;
+  }
+
+  return ratio;
+};
+
+var renderActualEffectLevel = function (pinPosition) {
+  effectLevelPin.style.left = getRatio(pinPosition, MAX_PIN_POSITION, '%');
+  effectLevelDepth.style.width = getRatio(pinPosition, MAX_PIN_POSITION, '%');
+  effectLevelValue.value = getRatio(pinPosition, MAX_PIN_POSITION);
+};
+
+var changeEffectLevel = function (pinPosition) {
+
+  switch (imgUploadPreview.className) {
+    case 'effects__preview--none':
+      imgUploadPreview.style.filter = '';
+      break;
+    case 'effects__preview--chrome':
+      imgUploadPreview.style.filter = getFilter('grayscale', 0, 1, 'none', pinPosition);
+      break;
+    case 'effects__preview--sepia':
+      imgUploadPreview.style.filter = getFilter('sepia', 0, 1, 'none', pinPosition);
+      break;
+    case 'effects__preview--marvin':
+      imgUploadPreview.style.filter = getFilter('invert', 0, 100, '%', pinPosition);
+      break;
+    case 'effects__preview--phobos':
+      imgUploadPreview.style.filter = getFilter('blur', 0, 3, 'px', pinPosition);
+      break;
+    case 'effects__preview--heat':
+      imgUploadPreview.style.filter = getFilter('brightness', 1, 3, 'none', pinPosition);
+      break;
+  }
+
+  renderActualEffectLevel(pinPosition);
+};
+
+var onEffectLevelPinMouseup = function () {
+  changeEffectLevel(testPinPosition);
+};
