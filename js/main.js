@@ -14,6 +14,7 @@ var MIN_SCALE = '25%';
 var MAX_SCALE = '100%';
 var MAX_PERCENT = 100;
 var MAX_PIN_POSITION = 495;
+var HASHTAG_MAX_LENGTH = 21;
 var pictures = [];
 
 var picturesDescriptions = [
@@ -174,13 +175,35 @@ body.classList.remove('modal-open');
 
 // загрузка изображения и показ формы редактирования
 var imgUploadContainer = document.querySelector('.img-upload');
+var imgUploadForm = imgUploadContainer.querySelector('.img-upload__form');
 var imgUploadInput = imgUploadContainer.querySelector('.img-upload__input');
 var imgUploadOverlay = imgUploadContainer.querySelector('.img-upload__overlay');
 var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
+var isHashtagFieldInFocus = false;
+
+var onHashtagFieldFocus = function () {
+  isHashtagFieldInFocus = true;
+};
+
+var onHashtagFieldBlur = function () {
+  isHashtagFieldInFocus = false;
+};
+
+var setHashtagFieldFocusHandler = function () {
+  hashtagsInput.addEventListener('focus', onHashtagFieldFocus);
+  hashtagsInput.addEventListener('blur', onHashtagFieldBlur);
+};
+
+var unsetHashtagFieldFocusHandler = function () {
+  hashtagsInput.removeEventListener('focus', onHashtagFieldFocus);
+  hashtagsInput.removeEventListener('blur', onHashtagFieldBlur);
+};
 
 var openUploadOverlay = function () {
   body.classList.add('modal-open');
   imgUploadOverlay.classList.remove('hidden');
+
+  setHashtagFieldFocusHandler();
 
   document.addEventListener('keydown', onUploadOverlayEscPress);
 
@@ -203,6 +226,8 @@ var closeUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
 
+  unsetHashtagFieldFocusHandler();
+
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 
   scaleBigger.removeEventListener('click', onScaleBiggerClick);
@@ -216,7 +241,7 @@ var closeUploadOverlay = function () {
 };
 
 var onUploadOverlayEscPress = function (evt) {
-  if (evt.code === 'Escape') {
+  if (evt.code === 'Escape' && isHashtagFieldInFocus === false) {
     evt.preventDefault();
     closeUploadOverlay();
   }
@@ -380,3 +405,63 @@ var changeEffectLevel = function (pinPosition) {
 var onEffectLevelPinMouseup = function () {
   changeEffectLevel(testPinPosition);
 };
+
+//  хэштеги
+/*
+<fieldset class="img-upload__text text">
+  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
+  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+</fieldset>
+*/
+var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
+var commentInput = imgUploadContainer.querySelector('.text__description');
+//  var sendPostBtn = imgUploadOverlay.querySelector('.img-upload__submit');
+
+/*
+-обработчики на Esc при фокусе в поле ввода
+-к хэштегу есть требования
+  - хэш-тег начинается с символа `#` (решётка);
+  - строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.;
+  - хеш-тег не может состоять только из одной решётки;
+  - максимальная длина одного хэш-тега 20 символов, включая решётку;
+  - хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом;
+  - хэш-теги разделяются пробелами;
+  - один и тот же хэш-тег не может быть использован дважды;
+  - нельзя указать больше пяти хэш-тегов;
+  - хэш-теги необязательны;
+-сообщения о неправильном формате хэштега задаются с помощью метода setCustomValidity у соответствующего поля.
+
+ЧП?:
+
+-пользователь вводит 1 хэштег, ставит пробел, вводит 2-й тег и.т.д. до 5-ти
+С 1-м тегом понятно, он его ввёл, мы проверили и дали ему ответ в setCustom...
+так...прочитал HA...user ввёл хэштеги, мы нарезали строку, получили массив и проверили каждый элемент на соответствие требованиям.
+пробел это сплиттер в split?
+
+#sea #ocean #ground #light #sync #happy
+*/
+
+//  работа с требованиями к хэштэгам
+
+imgUploadForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+
+  var hashtagsText = hashtagsInput.value;
+  var hashtags = hashtagsText.split(' ');
+
+  for (var i = 0; i < hashtags.length; i++) {
+    var hashtagLength = hashtags[i].length;
+    console.log(hashtagLength);
+    //  #12345678901234567890 - 21 символ
+    if (hashtagLength > HASHTAG_MAX_LENGTH) {
+      console.log('сработало первое условие');
+      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
+      console.log(hashtagLength);
+    } else {
+      console.log('сработало второе условие');
+      hashtagsInput.setCustomValidity('');
+      console.log(hashtagLength);
+    }
+  }
+
+});
