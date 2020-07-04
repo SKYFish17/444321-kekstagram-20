@@ -14,7 +14,7 @@ var MIN_SCALE = '25%';
 var MAX_SCALE = '100%';
 var MAX_PERCENT = 100;
 var MAX_PIN_POSITION = 495;
-var HASHTAG_MAX_LENGTH = 21;
+var HASHTAG_MAX_LENGTH = 20;
 var pictures = [];
 
 var picturesDescriptions = [
@@ -415,7 +415,7 @@ var onEffectLevelPinMouseup = function () {
 */
 var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
-//  var sendPostBtn = imgUploadOverlay.querySelector('.img-upload__submit');
+var sendPostBtn = imgUploadOverlay.querySelector('.img-upload__submit');
 
 /*
 -обработчики на Esc при фокусе в поле ввода
@@ -443,13 +443,23 @@ var commentInput = imgUploadContainer.querySelector('.text__description');
 
 //  работа с требованиями к хэштэгам
 
+
+/*
 imgUploadForm.addEventListener('submit', function (evt) {
-  evt.preventDefault();
+  //  evt.preventDefault();
 
   var hashtagsText = hashtagsInput.value;
   var hashtags = hashtagsText.split(' ');
 
   for (var i = 0; i < hashtags.length; i++) {
+    if (hashtags[i].charAt(0) !== '#') {
+      hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
+      console.log('условие 1');
+    } else {
+      hashtagsInput.setCustomValidity('');
+      console.log('условие 2');
+    }
+
     var hashtagLength = hashtags[i].length;
     console.log(hashtagLength);
     //  #12345678901234567890 - 21 символ
@@ -464,4 +474,45 @@ imgUploadForm.addEventListener('submit', function (evt) {
     }
   }
 
+});*/
+
+var checksDuplicateTags = function (tags) {
+  var areThereDuplicateTags = false;
+
+  for (var i = 0; i < tags.length - 1; i++) {
+    for (var j = i + 1; j < tags.length; j++) {
+      if (tags[i] === tags[j]) {
+        areThereDuplicateTags = true;
+      }
+    }
+  }
+
+  return areThereDuplicateTags;
+};
+
+sendPostBtn.addEventListener('click', function () {
+  var hashtagsText = hashtagsInput.value;
+  var hashtags = hashtagsText.split(' ');
+  var re = /^\#[а-яА-ЯёЁa-zA-Z0-9]+$/;
+
+  if (hashtags.length !== 0 && hashtags[0] !== '') {
+    for (var i = 0; i < hashtags.length; i++) {
+      var hashtagLength = hashtags[i].length;
+
+      if (hashtags[i].charAt(0) !== '#') {
+        hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
+      } else if (hashtags[i].charAt(0) === '#' && hashtagLength === 1) {
+        hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
+      } else if (!re.test(hashtags[i])) {
+        hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
+      } else if (hashtagLength > HASHTAG_MAX_LENGTH) {
+        hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
+      } else if (checksDuplicateTags(hashtags)) {
+        hashtagsInput.setCustomValidity('хеш-теги не должны повторяться');
+      } else {
+        hashtagsInput.setCustomValidity('Всё ок');
+      }
+    }
+  }
+  //  проработать пробелы в строке
 });
