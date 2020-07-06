@@ -15,6 +15,7 @@ var MAX_SCALE = '100%';
 var MAX_PERCENT = 100;
 var MAX_PIN_POSITION = 495;
 var HASHTAG_MAX_LENGTH = 20;
+var MAX_NUM_OF_TAGS = 5;
 var pictures = [];
 
 var picturesDescriptions = [
@@ -205,6 +206,8 @@ var openUploadOverlay = function () {
 
   setHashtagFieldFocusHandler();
 
+  hashtagsInput.addEventListener('input', validateTags);
+
   document.addEventListener('keydown', onUploadOverlayEscPress);
 
   scaleBigger.addEventListener('click', onScaleBiggerClick);
@@ -227,6 +230,8 @@ var closeUploadOverlay = function () {
   imgUploadInput.value = '';
 
   unsetHashtagFieldFocusHandler();
+
+  hashtagsInput.removeEventListener('input', validateTags);
 
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 
@@ -415,14 +420,17 @@ var onEffectLevelPinMouseup = function () {
 */
 var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
-var sendPostBtn = imgUploadOverlay.querySelector('.img-upload__submit');
 
 var checksDuplicateTags = function (tags) {
   var areThereDuplicateTags = false;
 
-  for (var i = 0; i < tags.length - 1; i++) {
-    for (var j = i + 1; j < tags.length; j++) {
-      if (tags[i] === tags[j]) {
+  for (var i = 0; i < tags.length; i++) {
+    tags[i] = tags[i].toLowerCase();
+  }
+
+  for (var j = 0; j < tags.length - 1; j++) {
+    for (var k = j + 1; k < tags.length; k++) {
+      if (tags[j] === tags[k]) {
         areThereDuplicateTags = true;
       }
     }
@@ -431,8 +439,7 @@ var checksDuplicateTags = function (tags) {
   return areThereDuplicateTags;
 };
 
-hashtagsInput.addEventListener('input', function () {
-
+var validateTags = function () {
   var hashtagsText = hashtagsInput.value;
   var hashtags = hashtagsText.split(' ');
 
@@ -449,9 +456,12 @@ hashtagsInput.addEventListener('input', function () {
     } else if (hashtagLength > HASHTAG_MAX_LENGTH) {
       hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
     } else if (checksDuplicateTags(hashtags)) {
-      hashtagsInput.setCustomValidity('хеш-теги не должны повторяться');
+      hashtagsInput.setCustomValidity('Хеш-теги не должны повторяться. #ХэшТег и #хэштег считаются одним и тем же тегом');
+    } else if (hashtags.length > MAX_NUM_OF_TAGS) {
+      hashtagsInput.setCustomValidity('Возможно ввести лишь 5 тегов');
     } else {
       hashtagsInput.setCustomValidity('Всё ок'); // для проверки, без отправки формы
     }
   }
-});
+  imgUploadForm.reportValidity();
+};
