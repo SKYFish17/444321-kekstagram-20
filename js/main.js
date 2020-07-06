@@ -417,65 +417,6 @@ var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
 var sendPostBtn = imgUploadOverlay.querySelector('.img-upload__submit');
 
-/*
--обработчики на Esc при фокусе в поле ввода
--к хэштегу есть требования
-  - хэш-тег начинается с символа `#` (решётка);
-  - строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.;
-  - хеш-тег не может состоять только из одной решётки;
-  - максимальная длина одного хэш-тега 20 символов, включая решётку;
-  - хэш-теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом;
-  - хэш-теги разделяются пробелами;
-  - один и тот же хэш-тег не может быть использован дважды;
-  - нельзя указать больше пяти хэш-тегов;
-  - хэш-теги необязательны;
--сообщения о неправильном формате хэштега задаются с помощью метода setCustomValidity у соответствующего поля.
-
-ЧП?:
-
--пользователь вводит 1 хэштег, ставит пробел, вводит 2-й тег и.т.д. до 5-ти
-С 1-м тегом понятно, он его ввёл, мы проверили и дали ему ответ в setCustom...
-так...прочитал HA...user ввёл хэштеги, мы нарезали строку, получили массив и проверили каждый элемент на соответствие требованиям.
-пробел это сплиттер в split?
-
-#sea #ocean #ground #light #sync #happy
-*/
-
-//  работа с требованиями к хэштэгам
-
-
-/*
-imgUploadForm.addEventListener('submit', function (evt) {
-  //  evt.preventDefault();
-
-  var hashtagsText = hashtagsInput.value;
-  var hashtags = hashtagsText.split(' ');
-
-  for (var i = 0; i < hashtags.length; i++) {
-    if (hashtags[i].charAt(0) !== '#') {
-      hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
-      console.log('условие 1');
-    } else {
-      hashtagsInput.setCustomValidity('');
-      console.log('условие 2');
-    }
-
-    var hashtagLength = hashtags[i].length;
-    console.log(hashtagLength);
-    //  #12345678901234567890 - 21 символ
-    if (hashtagLength > HASHTAG_MAX_LENGTH) {
-      console.log('сработало первое условие');
-      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
-      console.log(hashtagLength);
-    } else {
-      console.log('сработало второе условие');
-      hashtagsInput.setCustomValidity('');
-      console.log(hashtagLength);
-    }
-  }
-
-});*/
-
 var checksDuplicateTags = function (tags) {
   var areThereDuplicateTags = false;
 
@@ -490,29 +431,27 @@ var checksDuplicateTags = function (tags) {
   return areThereDuplicateTags;
 };
 
-sendPostBtn.addEventListener('click', function () {
+hashtagsInput.addEventListener('input', function () {
+
   var hashtagsText = hashtagsInput.value;
   var hashtags = hashtagsText.split(' ');
-  var re = /^\#[а-яА-ЯёЁa-zA-Z0-9]+$/;
 
-  if (hashtags.length !== 0 && hashtags[0] !== '') {
-    for (var i = 0; i < hashtags.length; i++) {
-      var hashtagLength = hashtags[i].length;
+  for (var i = 0; i < hashtags.length; i++) {
+    var re = /^\#[а-яА-ЯёЁa-zA-Z0-9]+$/;
+    var hashtagLength = hashtags[i].length;
 
-      if (hashtags[i].charAt(0) !== '#') {
-        hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
-      } else if (hashtags[i].charAt(0) === '#' && hashtagLength === 1) {
-        hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
-      } else if (!re.test(hashtags[i])) {
-        hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
-      } else if (hashtagLength > HASHTAG_MAX_LENGTH) {
-        hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
-      } else if (checksDuplicateTags(hashtags)) {
-        hashtagsInput.setCustomValidity('хеш-теги не должны повторяться');
-      } else {
-        hashtagsInput.setCustomValidity('Всё ок');
-      }
+    if (hashtags[i].charAt(0) !== '#') {
+      hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
+    } else if (hashtags[i].charAt(0) === '#' && hashtagLength === 1) {
+      hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
+    } else if (!re.test(hashtags[i])) {
+      hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
+    } else if (hashtagLength > HASHTAG_MAX_LENGTH) {
+      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
+    } else if (checksDuplicateTags(hashtags)) {
+      hashtagsInput.setCustomValidity('хеш-теги не должны повторяться');
+    } else {
+      hashtagsInput.setCustomValidity('Всё ок'); // для проверки, без отправки формы
     }
   }
-  //  проработать пробелы в строке
 });
