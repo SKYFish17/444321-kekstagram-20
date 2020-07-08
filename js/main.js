@@ -265,7 +265,8 @@ var scaleContainer = imgUploadContainer.querySelector('.scale');
 var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
 var scaleBigger = scaleContainer.querySelector('.scale__control--bigger');
 var scaleInput = scaleContainer.querySelector('.scale__control--value');
-var imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview').querySelector('img');
+var imgUploadPreviewContainer = imgUploadOverlay.querySelector('.img-upload__preview');
+var imgUploadPreview = imgUploadPreviewContainer.querySelector('img');
 
 var changeScaleValue = function (sign) {
   var scaleValue = scaleInput.value.split('%');
@@ -273,11 +274,11 @@ var changeScaleValue = function (sign) {
   switch (sign) {
     case '+':
       scaleInput.value = parseInt(scaleValue[0], 10) + SCALE_STEP + '%';
-      imgUploadPreview.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + SCALE_STEP) / 100 + ')';
+      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + SCALE_STEP) / 100 + ')';
       break;
     case '-':
       scaleInput.value = parseInt(scaleValue[0], 10) - SCALE_STEP + '%';
-      imgUploadPreview.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - SCALE_STEP) / 100 + ')';
+      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - SCALE_STEP) / 100 + ')';
       break;
   }
 };
