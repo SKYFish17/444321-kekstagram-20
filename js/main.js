@@ -212,17 +212,6 @@ var onFieldBlur = function (field) {
   };
 };
 
-/*
-var setHashtagFieldFocusHandler = function () {
-  hashtagsInput.addEventListener('focus', onFieldFocus('hashtags'));
-  hashtagsInput.addEventListener('blur', onFieldBlur('hashtags'));
-};
-
-var setCommentFieldFocusHandler = function () {
-  commentInput.addEventListener('focus', onFieldFocus('comment'));
-  commentInput.addEventListener('blur', onFieldBlur('comment'));
-};*/
-
 var setFieldFocusHandler = function (field) {
   if (field === 'hashtags') {
     hashtagsInput.addEventListener('focus', onFieldFocus('hashtags'));
@@ -232,17 +221,6 @@ var setFieldFocusHandler = function (field) {
     commentInput.addEventListener('blur', onFieldBlur('comment'));
   }
 };
-
-/*
-var unsetHashtagFieldFocusHandler = function () {
-  hashtagsInput.removeEventListener('focus', onFieldFocus('hashtags'));
-  hashtagsInput.removeEventListener('blur', onFieldBlur('hashtags'));
-};
-
-var unsetCommentFieldFocusHandler = function () {
-  commentInput.removeEventListener('focus', onFieldFocus('comment'));
-  commentInput.removeEventListener('blur', onFieldBlur('comment'));
-};*/
 
 var unsetFieldFocusHandler = function (field) {
   if (field === 'hashtags') {
@@ -270,7 +248,7 @@ var openUploadOverlay = function () {
 
   scaleSmaller.addEventListener('click', onScaleSmallerClick);
   scaleSmaller.addEventListener('keydown', onScaleSmallerPressEnter);
-  effectsList.addEventListener('change', onEffectsItemClick);
+  effectsList.addEventListener('change', onEffectsItemClick, true);
 
   effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
 
@@ -296,7 +274,7 @@ var closeUploadOverlay = function () {
 
   scaleSmaller.removeEventListener('click', onScaleSmallerClick);
   scaleSmaller.removeEventListener('keydown', onScaleSmallerPressEnter);
-  effectsList.removeEventListener('change', onEffectsItemClick);
+  effectsList.removeEventListener('change', onEffectsItemClick, true);
 
   effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
 };
@@ -465,12 +443,6 @@ var onEffectLevelPinMouseup = function () {
 };
 
 //  хэштеги
-/*
-<fieldset class="img-upload__text text">
-  <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
-  <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
-</fieldset>
-*/
 var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
 
@@ -518,4 +490,3 @@ var validateTags = function () {
   }
   imgUploadForm.reportValidity();
 };
-
