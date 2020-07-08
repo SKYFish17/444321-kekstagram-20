@@ -183,15 +183,6 @@ var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
 var isHashtagFieldInFocus = false;
 var isCommentFieldInFocus = false;
 
-/*
-var onHashtagFieldFocus = function () {
-  isHashtagFieldInFocus = true;
-};
-
-var onHashtagFieldBlur = function () {
-  isHashtagFieldInFocus = false;
-};*/
-
 var onFieldFocus = function (field) {
   return function () {
     if (field === 'hashtags') {
