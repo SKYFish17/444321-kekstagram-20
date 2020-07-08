@@ -211,10 +211,10 @@ var openUploadOverlay = function () {
   document.addEventListener('keydown', onUploadOverlayEscPress);
 
   scaleBigger.addEventListener('click', onScaleBiggerClick);
-  //  scaleBigger.addEventListener('keydown', onScaleBiggerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  scaleBigger.addEventListener('keydown', onScaleBiggerPressEnter);
 
   scaleSmaller.addEventListener('click', onScaleSmallerClick);
-  //  scaleSmaller.addEventListener('keydown', onScaleSmallerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  scaleSmaller.addEventListener('keydown', onScaleSmallerPressEnter);
   effectsList.addEventListener('change', onEffectsItemClick);
 
   effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
@@ -236,10 +236,10 @@ var closeUploadOverlay = function () {
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 
   scaleBigger.removeEventListener('click', onScaleBiggerClick);
-  //  scaleBigger.removeEventListener('keydown', onScaleBiggerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  scaleBigger.removeEventListener('keydown', onScaleBiggerPressEnter);
 
   scaleSmaller.removeEventListener('click', onScaleSmallerClick);
-  //  scaleSmaller.removeEventListener('keydown', onScaleSmallerPressEnter); это button, обработка по Enter не нужна. Или лучше оставить?
+  scaleSmaller.removeEventListener('keydown', onScaleSmallerPressEnter);
   effectsList.removeEventListener('change', onEffectsItemClick);
 
   effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
@@ -289,7 +289,6 @@ var onScaleBiggerClick = function () {
   }
 };
 
-/*  это button, обработка по Enter не нужна. Или лучше оставить?
 var onScaleBiggerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
     if (scaleInput.value !== (MAX_SCALE + '%')) {
@@ -297,7 +296,6 @@ var onScaleBiggerPressEnter = function (evt) {
     }
   }
 };
-*/
 
 var onScaleSmallerClick = function () {
   if (scaleInput.value !== (MIN_SCALE + '%')) {
@@ -305,7 +303,6 @@ var onScaleSmallerClick = function () {
   }
 };
 
-/*  это button, обработка по Enter не нужна. Или лучше оставить?
 var onScaleSmallerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
     if (scaleInput.value !== (MIN_SCALE + '%')) {
@@ -313,7 +310,6 @@ var onScaleSmallerPressEnter = function (evt) {
     }
   }
 };
-*/
 
 //  Наложение эффекта на изображение
 var effectsList = imgUploadOverlay.querySelector('.effects__list');
@@ -461,7 +457,7 @@ var validateTags = function () {
     } else if (hashtags.length > MAX_NUM_OF_TAGS) {
       hashtagsInput.setCustomValidity('Возможно ввести лишь 5 тегов');
     } else {
-      hashtagsInput.setCustomValidity('Всё ок'); // для проверки, без отправки формы
+      hashtagsInput.setCustomValidity('');
     }
   }
   imgUploadForm.reportValidity();
