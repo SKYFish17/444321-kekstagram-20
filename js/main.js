@@ -446,7 +446,7 @@ var validateTags = function () {
 
     if (hashtags[i].charAt(0) !== '#') {
       hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
-    } else if (hashtags[i].charAt(0) === '#' && hashtagLength === 1) {
+    } else if (hashtags[i] === '#') {
       hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
     } else if (!re.test(hashtags[i])) {
       hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
