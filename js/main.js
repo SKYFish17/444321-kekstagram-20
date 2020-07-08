@@ -10,8 +10,8 @@ var MAX_COMMENTS_NUMBER = 10;
 var COMMENT_AVATAR_WIDTH = 35;
 var COMMENT_AVATAR_HEIGHT = 35;
 var SCALE_STEP = 25;
-var MIN_SCALE = '25%';
-var MAX_SCALE = '100%';
+var MIN_SCALE = 25;
+var MAX_SCALE = 100;
 var MAX_PERCENT = 100;
 var MAX_PIN_POSITION = 495;
 var HASHTAG_MAX_LENGTH = 20;
@@ -284,7 +284,7 @@ var changeScaleValue = function (sign) {
 };
 
 var onScaleBiggerClick = function () {
-  if (scaleInput.value !== MAX_SCALE) {
+  if (scaleInput.value !== (MAX_SCALE + '%')) {
     changeScaleValue('+');
   }
 };
@@ -292,7 +292,7 @@ var onScaleBiggerClick = function () {
 /*  это button, обработка по Enter не нужна. Или лучше оставить?
 var onScaleBiggerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
-    if (scaleInput.value !== MAX_SCALE) {
+    if (scaleInput.value !== (MAX_SCALE + '%')) {
       changeScaleValue('+');
     }
   }
@@ -300,7 +300,7 @@ var onScaleBiggerPressEnter = function (evt) {
 */
 
 var onScaleSmallerClick = function () {
-  if (scaleInput.value !== MIN_SCALE) {
+  if (scaleInput.value !== (MIN_SCALE + '%')) {
     changeScaleValue('-');
   }
 };
@@ -308,7 +308,7 @@ var onScaleSmallerClick = function () {
 /*  это button, обработка по Enter не нужна. Или лучше оставить?
 var onScaleSmallerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
-    if (scaleInput.value !== MIN_SCALE) {
+    if (scaleInput.value !== (MIN_SCALE + '%')) {
       changeScaleValue('-');
     }
   }
