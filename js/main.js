@@ -66,6 +66,7 @@ var buildBasicData = function (index) {
   pictures[index].url = 'photos/' + (index + 1) + '.jpg';
   pictures[index].description = getRandomValue(picturesDescriptions);
   pictures[index].likes = getRandomNumber(MIN_LIKES_VALUE, MAX_LIKES_VALUE);
+  pictures[index].sNumber = index;
 };
 
 var buildCommentsData = function (index) {
@@ -96,6 +97,7 @@ var buildUserPost = function (pictureData) {
   var newPostComments = newPost.querySelector('.picture__comments');
 
   newPostImg.src = pictureData.url;
+  newPostImg.setAttribute('data-serial-number', pictureData.sNumber);
   newPostLikes.textContent = pictureData.likes;
   newPostComments.textContent = pictureData.comments.length;
 
@@ -151,28 +153,28 @@ var commentsLoader = bigPicture.querySelector('.comments-loader');
 var commentsList = bigPicture.querySelector('.social__comments');
 var body = document.querySelector('body');
 
-var renderBigPicture = function () {
+var renderBigPicture = function (userPost) {
   bigPicture.classList.remove('hidden');
 
-  bigPictureImg.src = usersPosts[0].url;
-  bigPictureDescription.textContent = usersPosts[0].description;
-  likesCount.textContent = usersPosts[0].likes;
-  commentsCount.textContent = usersPosts[0].comments.length;
+  bigPictureImg.src = userPost.url;
+  bigPictureDescription.textContent = userPost.description;
+  likesCount.textContent = userPost.likes;
+  commentsCount.textContent = userPost.comments.length;
 
-  for (var i = 0; i < usersPosts[0].comments.length; i++) {
-    commentsList.appendChild(getComment(usersPosts[0].comments[i]));
+  for (var i = 0; i < userPost.comments.length; i++) {
+    commentsList.appendChild(getComment(userPost.comments[i]));
   }
 };
 
 commentsLoader.classList.add('hidden');
 commentsCount.classList.add('hidden');
 
-renderBigPicture();
-body.classList.add('modal-open');
+//  renderBigPicture();
+//  body.classList.add('modal-open'); //  проверить  убрать в renderBigPicture();
 
 //  задание 4
-bigPicture.classList.add('hidden');
-body.classList.remove('modal-open');
+//  bigPicture.classList.add('hidden');
+//  body.classList.remove('modal-open');
 
 // загрузка изображения и показ формы редактирования
 var imgUploadContainer = document.querySelector('.img-upload');
@@ -481,3 +483,12 @@ var validateTags = function () {
   }
   imgUploadForm.reportValidity();
 };
+
+picturesContainer.addEventListener('click', function (evt) {
+
+  for (var i = 0; i < usersPosts.length; i++) {
+    if (Number(evt.target.getAttribute('data-serial-number')) === usersPosts[i].sNumber) {
+      renderBigPicture(usersPosts[i]);
+    }
+  }
+});
