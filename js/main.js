@@ -177,6 +177,7 @@ var renderBigPicture = function (userPost) {
 };
 
 var openBigPicture = function (evt) {
+  openModal();
 
   for (var i = 0; i < NUMBER_OF_POSTS; i++) {
     if (evt.target.tagName === 'IMG' && evt.target.getAttribute('src') === usersPosts[i].url) {
