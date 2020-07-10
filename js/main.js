@@ -167,13 +167,8 @@ var addUserComments = function (userPost) {
   }
 };
 
-var removeUserComments = function () {
-  for (var i = 0; i < commentsList.children.length - 2; i++) {
-    commentsList.removeChild(commentsList.lastChild);
-  }
-};
-
 var renderBigPicture = function (userPost) {
+  commentsList.innerHTML = '';
   bigPicture.classList.remove('hidden');
 
   bigPictureImg.src = userPost.url;
@@ -198,7 +193,6 @@ var openBigPicture = function (evt) {
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
-  removeUserComments();
   closeModal();
   document.removeEventListener('keydown', onBigPictureEscPress);
 };
