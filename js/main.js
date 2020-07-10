@@ -182,7 +182,7 @@ var openBigPicture = function (evt) {
   for (var i = 0; i < NUMBER_OF_POSTS; i++) {
     if (evt.target.tagName === 'IMG' && evt.target.getAttribute('src') === usersPosts[i].url) {
       renderBigPicture(usersPosts[i]);
-    } else if (evt.target.tagName === 'A' && evt.target.children[0].getAttribute('src') === usersPosts[i].url) {
+    } else if (evt.target.children[0].getAttribute('src') === usersPosts[i].url) {
       renderBigPicture(usersPosts[i]);
     }
   }
