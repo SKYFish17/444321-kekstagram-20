@@ -161,6 +161,18 @@ var closeModal = function () {
   body.classList.remove('modal-open');
 };
 
+var addUserComments = function (userPost) {
+  for (var i = 0; i < userPost.comments.length; i++) {
+    commentsList.appendChild(getComment(userPost.comments[i]));
+  }
+};
+
+var removeUserComments = function () {
+  for (var i = 0; i < commentsList.children.length - 2; i++) {
+    commentsList.removeChild(commentsList.lastChild);
+  }
+};
+
 var renderBigPicture = function (userPost) {
   bigPicture.classList.remove('hidden');
 
@@ -169,9 +181,7 @@ var renderBigPicture = function (userPost) {
   likesCount.textContent = userPost.likes;
   commentsCount.textContent = userPost.comments.length;
 
-  for (var i = 0; i < userPost.comments.length; i++) {
-    commentsList.appendChild(getComment(userPost.comments[i]));
-  }
+  addUserComments(userPost);
 
   document.addEventListener('keydown', onBigPictureEscPress);
 };
@@ -180,9 +190,7 @@ var openBigPicture = function (evt) {
   openModal();
 
   for (var i = 0; i < NUMBER_OF_POSTS; i++) {
-    if (evt.target.tagName === 'IMG' && evt.target.getAttribute('src') === usersPosts[i].url) {
-      renderBigPicture(usersPosts[i]);
-    } else if (evt.target.children[0].getAttribute('src') === usersPosts[i].url) {
+    if ((evt.target.querySelector('.picture__img') && (evt.target.querySelector('.picture__img').getAttribute('src') === usersPosts[i].url)) || (evt.target.getAttribute('src') === usersPosts[i].url)) {
       renderBigPicture(usersPosts[i]);
     }
   }
@@ -190,6 +198,7 @@ var openBigPicture = function (evt) {
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
+  removeUserComments();
   closeModal();
   document.removeEventListener('keydown', onBigPictureEscPress);
 };
