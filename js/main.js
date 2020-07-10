@@ -185,7 +185,9 @@ var openBigPicture = function (evt) {
   openModal();
 
   for (var i = 0; i < NUMBER_OF_POSTS; i++) {
-    if ((evt.target.querySelector('.picture__img') && (evt.target.querySelector('.picture__img').getAttribute('src') === usersPosts[i].url)) || (evt.target.getAttribute('src') === usersPosts[i].url)) {
+    if ((evt.target.querySelector('.picture__img') && (evt.target.querySelector('.picture__img').attributes.src.value === usersPosts[i].url))
+      ||
+      (!evt.target.querySelector('.picture__img') && (evt.target.attributes.src.value === usersPosts[i].url))) {
       renderBigPicture(usersPosts[i]);
     }
   }
