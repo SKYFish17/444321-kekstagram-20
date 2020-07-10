@@ -153,6 +153,14 @@ var commentsLoader = bigPicture.querySelector('.comments-loader');
 var commentsList = bigPicture.querySelector('.social__comments');
 var body = document.querySelector('body');
 
+var openModal = function () {
+  body.classList.add('modal-open');
+};
+
+var closeModal = function () {
+  body.classList.remove('modal-open');
+};
+
 var renderBigPicture = function (userPost) {
   bigPicture.classList.remove('hidden');
 
@@ -165,7 +173,6 @@ var renderBigPicture = function (userPost) {
     commentsList.appendChild(getComment(userPost.comments[i]));
   }
 
-  body.classList.add('modal-open');
   document.addEventListener('keydown', onBigPictureEscPress);
 };
 
@@ -182,7 +189,7 @@ var openBigPicture = function (evt) {
 
 var closeBigPicture = function () {
   bigPicture.classList.add('hidden');
-  body.classList.remove('modal-open');
+  closeModal();
   document.removeEventListener('keydown', onBigPictureEscPress);
 };
 
@@ -265,7 +272,7 @@ var unsetFieldFocusHandler = function (field) {
 };
 
 var openUploadOverlay = function () {
-  body.classList.add('modal-open');
+  openModal();
   imgUploadOverlay.classList.remove('hidden');
 
   setFieldFocusHandler('hashtags');
@@ -290,7 +297,7 @@ var openUploadOverlay = function () {
 };
 
 var closeUploadOverlay = function () {
-  body.classList.remove('modal-open');
+  closeModal();
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
 
