@@ -181,13 +181,11 @@ var renderBigPicture = function (userPost) {
   document.addEventListener('keydown', onBigPictureEscPress);
 };
 
-var openBigPicture = function (evt) {
+var openBigPicture = function (imgSrc) {
   openModal();
 
   for (var i = 0; i < NUMBER_OF_POSTS; i++) {
-    if ((evt.target.querySelector('.picture__img') && (evt.target.querySelector('.picture__img').attributes.src.value === usersPosts[i].url))
-      ||
-      (!evt.target.querySelector('.picture__img') && (evt.target.attributes.src.value === usersPosts[i].url))) {
+    if (imgSrc === usersPosts[i].url) {
       renderBigPicture(usersPosts[i]);
     }
   }
@@ -200,12 +198,17 @@ var closeBigPicture = function () {
 };
 
 picturesContainer.addEventListener('click', function (evt) {
-  openBigPicture(evt);
+  if (evt.target.attributes.src !== undefined) {
+    openBigPicture(evt.target.attributes.src.value);
+  }
 }, true);
 
+
 picturesContainer.addEventListener('keydown', function (evt) {
+  var pictureAtLink = evt.target.querySelector('.picture__img');
+
   if (evt.code === 'Enter') {
-    openBigPicture(evt);
+    openBigPicture(pictureAtLink.attributes.src.value);
   }
 }, true);
 
