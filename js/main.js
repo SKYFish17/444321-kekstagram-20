@@ -198,7 +198,7 @@ var closeBigPicture = function () {
 };
 
 picturesContainer.addEventListener('click', function (evt) {
-  if (evt.target.attributes.src !== undefined) {
+  if (evt.target.tagName === 'IMG') {
     openBigPicture(evt.target.attributes.src.value);
   }
 }, true);
