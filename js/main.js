@@ -237,55 +237,12 @@ var imgUploadForm = imgUploadContainer.querySelector('.img-upload__form');
 var imgUploadInput = imgUploadContainer.querySelector('.img-upload__input');
 var imgUploadOverlay = imgUploadContainer.querySelector('.img-upload__overlay');
 var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
-var isHashtagFieldInFocus = false;
-var isCommentFieldInFocus = false;
-
-var onFieldFocus = function (field) {
-  return function () {
-    if (field === 'hashtags') {
-      isHashtagFieldInFocus = true;
-    } else if (field === 'comment') {
-      isCommentFieldInFocus = true;
-    }
-  };
-};
-
-var onFieldBlur = function (field) {
-  return function () {
-    if (field === 'hashtags') {
-      isHashtagFieldInFocus = false;
-    } else if (field === 'comment') {
-      isCommentFieldInFocus = false;
-    }
-  };
-};
-
-var setFieldFocusHandler = function (field) {
-  if (field === 'hashtags') {
-    hashtagsInput.addEventListener('focus', onFieldFocus('hashtags'));
-    hashtagsInput.addEventListener('blur', onFieldBlur('hashtags'));
-  } else if (field === 'comment') {
-    commentInput.addEventListener('focus', onFieldFocus('comment'));
-    commentInput.addEventListener('blur', onFieldBlur('comment'));
-  }
-};
-
-var unsetFieldFocusHandler = function (field) {
-  if (field === 'hashtags') {
-    hashtagsInput.removeEventListener('focus', onFieldFocus('hashtags'));
-    hashtagsInput.removeEventListener('blur', onFieldBlur('hashtags'));
-  } else if (field === 'comment') {
-    commentInput.removeEventListener('focus', onFieldFocus('comment'));
-    commentInput.removeEventListener('blur', onFieldBlur('comment'));
-  }
-};
+var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
+var commentInput = imgUploadContainer.querySelector('.text__description');
 
 var openUploadOverlay = function () {
   openModal();
   imgUploadOverlay.classList.remove('hidden');
-
-  setFieldFocusHandler('hashtags');
-  setFieldFocusHandler('comment');
 
   hashtagsInput.addEventListener('input', validateTags);
 
@@ -310,9 +267,6 @@ var closeUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
 
-  unsetFieldFocusHandler('hashtags');
-  unsetFieldFocusHandler('comment');
-
   hashtagsInput.removeEventListener('input', validateTags);
 
   document.removeEventListener('keydown', onUploadOverlayEscPress);
@@ -328,7 +282,7 @@ var closeUploadOverlay = function () {
 };
 
 var onUploadOverlayEscPress = function (evt) {
-  if (evt.code === 'Escape' && isHashtagFieldInFocus === false && isCommentFieldInFocus === false) {
+  if (evt.code === 'Escape' && evt.target !== hashtagsInput && evt.target !== commentInput) {
     evt.preventDefault();
     closeUploadOverlay();
   }
@@ -491,9 +445,6 @@ var onEffectLevelPinMouseup = function () {
 };
 
 //  хэштеги
-var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
-var commentInput = imgUploadContainer.querySelector('.text__description');
-
 var checksDuplicateTags = function (tags) {
   var areThereDuplicateTags = false;
 
