@@ -1,82 +1,6 @@
 'use strict';
-//  константы
-var NUMBER_OF_POSTS = 25;
-var MIN_LIKES_VALUE = 15;
-var MAX_LIKES_VALUE = 200;
-var MIN_AVATAR_NUMBER = 1;
-var MAX_AVATAR_NUMBER = 6;
-var MIN_COMMENTS_NUMBER = 1;
-var MAX_COMMENTS_NUMBER = 10;
-var COMMENT_AVATAR_WIDTH = 35;
-var COMMENT_AVATAR_HEIGHT = 35;
-var SCALE_STEP = 25;
-var MIN_SCALE = 25;
-var MAX_SCALE = 100;
-var MAX_PERCENT = 100;
-var MAX_PIN_POSITION = 495;
-var HASHTAG_MAX_LENGTH = 20;
-var MAX_NUM_OF_TAGS = 5;
-var pictures = [];
-
-var picturesDescriptions = [
-  'Моё любимое фото',
-  'Отличное фото, что скажете?',
-  'Неплохо, правда?',
-  'Снимал на Nokia 3310. Он не только гвозди забивать может!',
-  'Было скучно...А что вы делаете когда вам скучно?',
-  'Британские учёные раскрыли что...читать далее',
-  'Лайк, подписка, всё по списку...и я дальше буду радовать вас новыми фото каждую минуту)',
-  'Это описание сделано генератором случайных генераторов случайных генераторов...'
-];
-
-var messages = [
-  'Всё отлично!',
-  'В целом всё неплохо. Но не всё.',
-  'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
-  'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
-  'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-];
-
-var names = [
-  'Женя',
-  'Мария',
-  'Ксюша',
-  'Олег',
-  'Екатерина',
-  'Ярослав',
-  'Андрей',
-  'Вика'
-];
 
 var picturesContainer = document.querySelector('.pictures');
-
-var buildBasicData = function (index) {
-  pictures[index] = {};
-  pictures[index].url = 'photos/' + (index + 1) + '.jpg';
-  pictures[index].description = window.util.getRandomValue(picturesDescriptions);
-  pictures[index].likes = window.util.getRandomNumber(MIN_LIKES_VALUE, MAX_LIKES_VALUE);
-};
-
-var buildCommentsData = function (index) {
-  pictures[index].comments = [];
-
-  for (var j = 0; j < window.util.getRandomNumber(MIN_COMMENTS_NUMBER, MAX_COMMENTS_NUMBER); j++) {
-    pictures[index].comments[j] = {};
-    pictures[index].comments[j].avatar = 'img/avatar-' + window.util.getRandomNumber(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER) + '.svg';
-    pictures[index].comments[j].message = window.util.getRandomValue(messages);
-    pictures[index].comments[j].name = window.util.getRandomValue(names);
-  }
-};
-
-var getPicturesData = function () {
-  for (var i = 0; i < NUMBER_OF_POSTS; i++) {
-    buildBasicData(i);
-    buildCommentsData(i);
-  }
-
-  return pictures;
-};
 
 var buildUserPost = function (pictureData) {
   var template = document.querySelector('#picture').content.querySelector('.picture');
@@ -102,7 +26,7 @@ var renderUserPosts = function (picturesData) {
   picturesContainer.appendChild(fragment);
 };
 
-var usersPosts = getPicturesData();
+var usersPosts = window.data.getPicturesData();
 
 renderUserPosts(usersPosts);
 
@@ -119,8 +43,8 @@ var getComment = function (userComment) {
   var newCommentAvatar = getHtmlElement('img', 'social__picture');
   newCommentAvatar.src = userComment.avatar;
   newCommentAvatar.alt = userComment.name;
-  newCommentAvatar.width = COMMENT_AVATAR_WIDTH;
-  newCommentAvatar.height = COMMENT_AVATAR_HEIGHT;
+  newCommentAvatar.width = window.constants.COMMENT_AVATAR_WIDTH;
+  newCommentAvatar.height = window.constants.COMMENT_AVATAR_HEIGHT;
 
   newComment.appendChild(newCommentAvatar);
 
@@ -174,7 +98,7 @@ var renderBigPicture = function (userPost) {
 var openBigPicture = function (imgSrc) {
   openModal();
 
-  for (var i = 0; i < NUMBER_OF_POSTS; i++) {
+  for (var i = 0; i < window.constants.NUMBER_OF_POSTS; i++) {
     if (imgSrc === usersPosts[i].url) {
       renderBigPicture(usersPosts[i]);
     }
@@ -299,39 +223,39 @@ var changeScaleValue = function (sign) {
 
   switch (sign) {
     case '+':
-      scaleInput.value = parseInt(scaleValue[0], 10) + SCALE_STEP + '%';
-      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + SCALE_STEP) / 100 + ')';
+      scaleInput.value = parseInt(scaleValue[0], 10) + window.constants.SCALE_STEP + '%';
+      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + window.constants.SCALE_STEP) / 100 + ')';
       break;
     case '-':
-      scaleInput.value = parseInt(scaleValue[0], 10) - SCALE_STEP + '%';
-      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - SCALE_STEP) / 100 + ')';
+      scaleInput.value = parseInt(scaleValue[0], 10) - window.constants.SCALE_STEP + '%';
+      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - window.constants.SCALE_STEP) / 100 + ')';
       break;
   }
 };
 
 var onScaleBiggerClick = function () {
-  if (scaleInput.value !== (MAX_SCALE + '%')) {
+  if (scaleInput.value !== (window.constants.MAX_SCALE + '%')) {
     changeScaleValue('+');
   }
 };
 
 var onScaleBiggerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
-    if (scaleInput.value !== (MAX_SCALE + '%')) {
+    if (scaleInput.value !== (window.constants.MAX_SCALE + '%')) {
       changeScaleValue('+');
     }
   }
 };
 
 var onScaleSmallerClick = function () {
-  if (scaleInput.value !== (MIN_SCALE + '%')) {
+  if (scaleInput.value !== (window.constants.MIN_SCALE + '%')) {
     changeScaleValue('-');
   }
 };
 
 var onScaleSmallerPressEnter = function (evt) {
   if (evt.code === 'Enter') {
-    if (scaleInput.value !== (MIN_SCALE + '%')) {
+    if (scaleInput.value !== (window.constants.MIN_SCALE + '%')) {
       changeScaleValue('-');
     }
   }
@@ -359,7 +283,7 @@ var onEffectsItemClick = function (evt) {
 
   previousEffectName = effectName;
   imgUploadPreview.classList.add(effectName);
-  changeEffectLevel(MAX_PIN_POSITION);
+  changeEffectLevel(window.constants.MAX_PIN_POSITION);
 };
 
 // фильтры
@@ -375,7 +299,7 @@ var getFilter = function (effectType, effectMinLevel, effectMaxLevel, unit, pinP
   var filter;
   var effectLevelDifference = effectMaxLevel - effectMinLevel;
 
-  effectLevel = effectMinLevel + pinPosition / MAX_PIN_POSITION * effectLevelDifference;
+  effectLevel = effectMinLevel + pinPosition / window.constants.MAX_PIN_POSITION * effectLevelDifference;
 
   if (unit !== 'none') {
     filter = effectType + '(' + effectLevel + unit + ')';
@@ -390,18 +314,18 @@ var getRatio = function (numberOne, numberTwo, sign) {
   var ratio;
 
   if (sign) {
-    ratio = numberOne / numberTwo * MAX_PERCENT + sign;
+    ratio = numberOne / numberTwo * window.constants.MAX_PERCENT + sign;
   } else {
-    ratio = numberOne / numberTwo * MAX_PERCENT;
+    ratio = numberOne / numberTwo * window.constants.MAX_PERCENT;
   }
 
   return ratio;
 };
 
 var renderActualEffectLevel = function (pinPosition) {
-  effectLevelPin.style.left = getRatio(pinPosition, MAX_PIN_POSITION, '%');
-  effectLevelDepth.style.width = getRatio(pinPosition, MAX_PIN_POSITION, '%');
-  effectLevelValue.value = getRatio(pinPosition, MAX_PIN_POSITION);
+  effectLevelPin.style.left = getRatio(pinPosition, window.constants.MAX_PIN_POSITION, '%');
+  effectLevelDepth.style.width = getRatio(pinPosition, window.constants.MAX_PIN_POSITION, '%');
+  effectLevelValue.value = getRatio(pinPosition, window.constants.MAX_PIN_POSITION);
 };
 
 var changeEffectLevel = function (pinPosition) {
@@ -467,11 +391,11 @@ var validateTags = function () {
       hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
     } else if (!re.test(hashtags[i])) {
       hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
-    } else if (hashtagLength > HASHTAG_MAX_LENGTH) {
-      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - HASHTAG_MAX_LENGTH) + ' симв.');
+    } else if (hashtagLength > window.constants.HASHTAG_MAX_LENGTH) {
+      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - window.constants.HASHTAG_MAX_LENGTH) + ' симв.');
     } else if (checksDuplicateTags(hashtags)) {
       hashtagsInput.setCustomValidity('Хеш-теги не должны повторяться. #ХэшТег и #хэштег считаются одним и тем же тегом');
-    } else if (hashtags.length > MAX_NUM_OF_TAGS) {
+    } else if (hashtags.length > window.constants.MAX_NUM_OF_TAGS) {
       hashtagsInput.setCustomValidity('Возможно ввести лишь 5 тегов');
     } else {
       hashtagsInput.setCustomValidity('');
