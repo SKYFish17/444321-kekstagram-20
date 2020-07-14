@@ -37,7 +37,7 @@ var getHtmlElement = function (tag, className) {
   return htmlElement;
 };
 
-var getComment = function (userComment) {
+var buildComment = function (userComment) {
   var newComment = getHtmlElement('li', 'social__comment');
 
   var newCommentAvatar = getHtmlElement('img', 'social__picture');
@@ -75,9 +75,9 @@ var closeModal = function () {
   body.classList.remove('modal-open');
 };
 
-var addUserComments = function (userPost) {
+var renderUserComments = function (userPost) {
   for (var i = 0; i < userPost.comments.length; i++) {
-    commentsList.appendChild(getComment(userPost.comments[i]));
+    commentsList.appendChild(buildComment(userPost.comments[i]));
   }
 };
 
@@ -90,7 +90,7 @@ var renderBigPicture = function (userPost) {
   likesCount.textContent = userPost.likes;
   commentsCount.textContent = userPost.comments.length;
 
-  addUserComments(userPost);
+  renderUserComments(userPost);
 
   document.addEventListener('keydown', onBigPictureEscPress);
 };
