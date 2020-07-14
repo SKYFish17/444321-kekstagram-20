@@ -2,17 +2,10 @@
 
 var picturesContainer = document.querySelector('.pictures');
 
-var getHtmlElement = function (tag, className) {
-  var htmlElement = document.createElement(tag);
-  htmlElement.classList.add(className);
-
-  return htmlElement;
-};
-
 var buildComment = function (userComment) {
-  var newComment = getHtmlElement('li', 'social__comment');
+  var newComment = window.util.getHtmlElement('li', 'social__comment');
 
-  var newCommentAvatar = getHtmlElement('img', 'social__picture');
+  var newCommentAvatar = window.util.getHtmlElement('img', 'social__picture');
   newCommentAvatar.src = userComment.avatar;
   newCommentAvatar.alt = userComment.name;
   newCommentAvatar.width = window.constants.COMMENT_AVATAR_WIDTH;
@@ -20,7 +13,7 @@ var buildComment = function (userComment) {
 
   newComment.appendChild(newCommentAvatar);
 
-  var newCommentText = getHtmlElement('p', 'social__text');
+  var newCommentText = window.util.getHtmlElement('p', 'social__text');
   newCommentText.textContent = userComment.message;
 
   newComment.appendChild(newCommentText);
