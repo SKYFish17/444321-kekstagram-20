@@ -1,5 +1,5 @@
 'use strict';
-
+//  константы
 var NUMBER_OF_POSTS = 25;
 var MIN_LIKES_VALUE = 15;
 var MAX_LIKES_VALUE = 200;
@@ -51,31 +51,21 @@ var names = [
 
 var picturesContainer = document.querySelector('.pictures');
 
-var getRandomNumber = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-var getRandomValue = function (arr) {
-  return arr[getRandomNumber(0, arr.length - 1)];
-};
-
 var buildBasicData = function (index) {
   pictures[index] = {};
   pictures[index].url = 'photos/' + (index + 1) + '.jpg';
-  pictures[index].description = getRandomValue(picturesDescriptions);
-  pictures[index].likes = getRandomNumber(MIN_LIKES_VALUE, MAX_LIKES_VALUE);
+  pictures[index].description = window.util.getRandomValue(picturesDescriptions);
+  pictures[index].likes = window.util.getRandomNumber(MIN_LIKES_VALUE, MAX_LIKES_VALUE);
 };
 
 var buildCommentsData = function (index) {
   pictures[index].comments = [];
 
-  for (var j = 0; j < getRandomNumber(MIN_COMMENTS_NUMBER, MAX_COMMENTS_NUMBER); j++) {
+  for (var j = 0; j < window.util.getRandomNumber(MIN_COMMENTS_NUMBER, MAX_COMMENTS_NUMBER); j++) {
     pictures[index].comments[j] = {};
-    pictures[index].comments[j].avatar = 'img/avatar-' + getRandomNumber(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER) + '.svg';
-    pictures[index].comments[j].message = getRandomValue(messages);
-    pictures[index].comments[j].name = getRandomValue(names);
+    pictures[index].comments[j].avatar = 'img/avatar-' + window.util.getRandomNumber(MIN_AVATAR_NUMBER, MAX_AVATAR_NUMBER) + '.svg';
+    pictures[index].comments[j].message = window.util.getRandomValue(messages);
+    pictures[index].comments[j].name = window.util.getRandomValue(names);
   }
 };
 
