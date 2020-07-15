@@ -31,11 +31,11 @@
       var re = /^\#[а-яА-ЯёЁa-zA-Z0-9]+$/;
       var hashtagLength = hashtags[i].length;
 
-      if (hashtags[i].charAt(0) !== '#') {
+      if (hashtags[i].charAt(0) !== '#' && hashtags[i].charAt(0) !== '') {
         hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
       } else if (hashtags[i] === '#') {
         hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
-      } else if (!re.test(hashtags[i])) {
+      } else if (!re.test(hashtags[i]) && hashtags[i].charAt(0) !== '') {
         hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
       } else if (hashtagLength > window.constants.HASHTAG_MAX_LENGTH) {
         hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - window.constants.HASHTAG_MAX_LENGTH) + ' симв.');
