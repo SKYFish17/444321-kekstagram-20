@@ -9,6 +9,10 @@ var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
 var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
 
+var scaleContainer = imgUploadContainer.querySelector('.scale');
+var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
+var scaleBigger = scaleContainer.querySelector('.scale__control--bigger');
+
 var openUploadOverlay = function () {
   window.dialog.openModal();
   imgUploadOverlay.classList.remove('hidden');
@@ -17,11 +21,11 @@ var openUploadOverlay = function () {
 
   document.addEventListener('keydown', onUploadOverlayEscPress);
 
-  scaleBigger.addEventListener('click', onScaleBiggerClick);
-  scaleBigger.addEventListener('keydown', onScaleBiggerPressEnter);
+  scaleBigger.addEventListener('click', window.formScale.onScaleBiggerClick);
+  scaleBigger.addEventListener('keydown', window.formScale.onScaleBiggerPressEnter);
 
-  scaleSmaller.addEventListener('click', onScaleSmallerClick);
-  scaleSmaller.addEventListener('keydown', onScaleSmallerPressEnter);
+  scaleSmaller.addEventListener('click', window.formScale.onScaleSmallerClick);
+  scaleSmaller.addEventListener('keydown', window.formScale.onScaleSmallerPressEnter);
   effectsList.addEventListener('change', onEffectsItemClick, true);
 
   effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseup);
@@ -40,11 +44,11 @@ var closeUploadOverlay = function () {
 
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 
-  scaleBigger.removeEventListener('click', onScaleBiggerClick);
-  scaleBigger.removeEventListener('keydown', onScaleBiggerPressEnter);
+  scaleBigger.removeEventListener('click', window.formScale.onScaleBiggerClick);
+  scaleBigger.removeEventListener('keydown', window.formScale.onScaleBiggerPressEnter);
 
-  scaleSmaller.removeEventListener('click', onScaleSmallerClick);
-  scaleSmaller.removeEventListener('keydown', onScaleSmallerPressEnter);
+  scaleSmaller.removeEventListener('click', window.formScale.onScaleSmallerClick);
+  scaleSmaller.removeEventListener('keydown', window.formScale.onScaleSmallerPressEnter);
   effectsList.removeEventListener('change', onEffectsItemClick, true);
 
   effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseup);
@@ -66,56 +70,8 @@ imgUploadCancel.addEventListener('click', function () {
 });
 
 //  масштабирование изображения
-var scaleContainer = imgUploadContainer.querySelector('.scale');
-var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
-var scaleBigger = scaleContainer.querySelector('.scale__control--bigger');
-var scaleInput = scaleContainer.querySelector('.scale__control--value');
 var imgUploadPreviewContainer = imgUploadOverlay.querySelector('.img-upload__preview');
 var imgUploadPreview = imgUploadPreviewContainer.querySelector('img');
-
-var changeScaleValue = function (sign) {
-  var scaleValue = scaleInput.value.split('%');
-
-  switch (sign) {
-    case '+':
-      scaleInput.value = parseInt(scaleValue[0], 10) + window.constants.SCALE_STEP + '%';
-      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) + window.constants.SCALE_STEP) / 100 + ')';
-      break;
-    case '-':
-      scaleInput.value = parseInt(scaleValue[0], 10) - window.constants.SCALE_STEP + '%';
-      imgUploadPreviewContainer.style.transform = 'scale' + '(' + (parseInt(scaleValue[0], 10) - window.constants.SCALE_STEP) / 100 + ')';
-      break;
-  }
-};
-
-var onScaleBiggerClick = function () {
-  if (scaleInput.value !== (window.constants.MAX_SCALE + '%')) {
-    changeScaleValue('+');
-  }
-};
-
-var onScaleBiggerPressEnter = function (evt) {
-  if (evt.code === 'Enter') {
-    if (scaleInput.value !== (window.constants.MAX_SCALE + '%')) {
-      changeScaleValue('+');
-    }
-  }
-};
-
-var onScaleSmallerClick = function () {
-  if (scaleInput.value !== (window.constants.MIN_SCALE + '%')) {
-    changeScaleValue('-');
-  }
-};
-
-var onScaleSmallerPressEnter = function (evt) {
-  if (evt.code === 'Enter') {
-    if (scaleInput.value !== (window.constants.MIN_SCALE + '%')) {
-      changeScaleValue('-');
-    }
-  }
-};
-
 //  Наложение эффекта на изображение
 var effectsList = imgUploadOverlay.querySelector('.effects__list');
 var effectSlider = imgUploadOverlay.querySelector('.effect-level');
