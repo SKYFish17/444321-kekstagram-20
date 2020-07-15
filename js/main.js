@@ -10,8 +10,7 @@
   });
 
   picturesContainer.addEventListener('click', function (evt) {
-    //  доработать условие на проверку тега img
-    if (evt.target.tagName === 'IMG') {
+    if (evt.target.classList.contains('picture__img')) {
       window.dialogPreview.openBigPicture(evt.target.attributes.src.value);
     }
   }, true);
