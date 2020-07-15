@@ -68,12 +68,11 @@
     }
   };
 
-  imgUploadInput.addEventListener('change', function () {
-    openUploadOverlay();
-  });
-
   imgUploadCancel.addEventListener('click', function () {
     closeUploadOverlay();
   });
 
+  window.dialogForm = {
+    openUploadOverlay: openUploadOverlay
+  };
 })();

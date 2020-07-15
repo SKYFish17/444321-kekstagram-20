@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var picturesContainer = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
   var bigPictureCloseBtn = bigPicture.querySelector('.big-picture__cancel');
   var commentsList = bigPicture.querySelector('.social__comments');
@@ -25,22 +24,6 @@
     document.removeEventListener('keydown', onBigPictureEscPress);
   };
 
-  picturesContainer.addEventListener('click', function (evt) {
-    //  доработать условие на проверку тега img
-    if (evt.target.tagName === 'IMG') {
-      openBigPicture(evt.target.attributes.src.value);
-    }
-  }, true);
-
-
-  picturesContainer.addEventListener('keydown', function (evt) {
-    var pictureAtLink = evt.target.querySelector('.picture__img');
-
-    if (evt.code === 'Enter') {
-      openBigPicture(pictureAtLink.attributes.src.value);
-    }
-  }, true);
-
   bigPictureCloseBtn.addEventListener('click', function () {
     closeBigPicture();
   });
@@ -56,5 +39,9 @@
       evt.preventDefault();
       closeBigPicture();
     }
+  };
+
+  window.dialogPreview = {
+    openBigPicture: openBigPicture
   };
 })();
