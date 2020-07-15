@@ -1,115 +1,5 @@
 'use strict';
 
-var picturesContainer = document.querySelector('.pictures');
-
-var buildComment = function (userComment) {
-  var newComment = window.util.getHtmlElement('li', 'social__comment');
-
-  var newCommentAvatar = window.util.getHtmlElement('img', 'social__picture');
-  newCommentAvatar.src = userComment.avatar;
-  newCommentAvatar.alt = userComment.name;
-  newCommentAvatar.width = window.constants.COMMENT_AVATAR_WIDTH;
-  newCommentAvatar.height = window.constants.COMMENT_AVATAR_HEIGHT;
-
-  newComment.appendChild(newCommentAvatar);
-
-  var newCommentText = window.util.getHtmlElement('p', 'social__text');
-  newCommentText.textContent = userComment.message;
-
-  newComment.appendChild(newCommentText);
-
-  return newComment;
-};
-
-// режим big picture для всех изображений
-var bigPicture = document.querySelector('.big-picture');
-var bigPictureCloseBtn = bigPicture.querySelector('.big-picture__cancel');
-var bigPictureImg = bigPicture.querySelector('.big-picture__img').querySelector('img');
-var likesCount = bigPicture.querySelector('.likes-count');
-var bigPictureDescription = bigPicture.querySelector('.social__caption');
-var commentsCount = bigPicture.querySelector('.social__comment-count');
-var commentsLoader = bigPicture.querySelector('.comments-loader');
-var commentsList = bigPicture.querySelector('.social__comments');
-var body = document.querySelector('body');
-
-var openModal = function () {
-  body.classList.add('modal-open');
-};
-
-var closeModal = function () {
-  body.classList.remove('modal-open');
-};
-
-var renderUserComments = function (userPost) {
-  for (var i = 0; i < userPost.comments.length; i++) {
-    commentsList.appendChild(buildComment(userPost.comments[i]));
-  }
-};
-
-var renderBigPicture = function (userPost) {
-  commentsList.innerHTML = '';
-  bigPicture.classList.remove('hidden');
-
-  bigPictureImg.src = userPost.url;
-  bigPictureDescription.textContent = userPost.description;
-  likesCount.textContent = userPost.likes;
-  commentsCount.textContent = userPost.comments.length;
-
-  renderUserComments(userPost);
-
-  document.addEventListener('keydown', onBigPictureEscPress);
-};
-
-var openBigPicture = function (imgSrc) {
-  openModal();
-
-  for (var i = 0; i < window.constants.NUMBER_OF_POSTS; i++) {
-    if (imgSrc === window.picture.usersPosts[i].url) {
-      renderBigPicture(window.picture.usersPosts[i]);
-    }
-  }
-};
-
-var closeBigPicture = function () {
-  bigPicture.classList.add('hidden');
-  closeModal();
-  document.removeEventListener('keydown', onBigPictureEscPress);
-};
-
-picturesContainer.addEventListener('click', function (evt) {
-  if (evt.target.attributes.src !== undefined) {
-    openBigPicture(evt.target.attributes.src.value);
-  }
-}, true);
-
-
-picturesContainer.addEventListener('keydown', function (evt) {
-  var pictureAtLink = evt.target.querySelector('.picture__img');
-
-  if (evt.code === 'Enter') {
-    openBigPicture(pictureAtLink.attributes.src.value);
-  }
-}, true);
-
-bigPictureCloseBtn.addEventListener('click', function () {
-  closeBigPicture();
-});
-
-bigPictureCloseBtn.addEventListener('keydown', function (evt) {
-  if (evt.code === 'Enter') {
-    closeBigPicture();
-  }
-});
-
-var onBigPictureEscPress = function (evt) {
-  if (evt.code === 'Escape') {
-    closeBigPicture();
-  }
-};
-
-commentsLoader.classList.add('hidden');
-commentsCount.classList.add('hidden');
-
 // загрузка изображения и показ формы редактирования
 var imgUploadContainer = document.querySelector('.img-upload');
 var imgUploadForm = imgUploadContainer.querySelector('.img-upload__form');
@@ -120,7 +10,7 @@ var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
 
 var openUploadOverlay = function () {
-  openModal();
+  window.dialog.openModal();
   imgUploadOverlay.classList.remove('hidden');
 
   hashtagsInput.addEventListener('input', validateTags);
@@ -142,7 +32,7 @@ var openUploadOverlay = function () {
 };
 
 var closeUploadOverlay = function () {
-  closeModal();
+  window.dialog.closeModal();
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
 
