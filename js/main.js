@@ -2,12 +2,14 @@
 
 // загрузка изображения и показ формы редактирования
 var imgUploadContainer = document.querySelector('.img-upload');
-var imgUploadForm = imgUploadContainer.querySelector('.img-upload__form');
+
 var imgUploadInput = imgUploadContainer.querySelector('.img-upload__input');
 var imgUploadOverlay = imgUploadContainer.querySelector('.img-upload__overlay');
 var imgUploadCancel = imgUploadContainer.querySelector('.img-upload__cancel');
+
 var hashtagsInput = imgUploadContainer.querySelector('.text__hashtags');
 var commentInput = imgUploadContainer.querySelector('.text__description');
+
 var effectsList = imgUploadOverlay.querySelector('.effects__list');
 var effectsPreviewNone = effectsList.querySelector('#effect-none');
 var effectSlider = imgUploadOverlay.querySelector('.effect-level');
@@ -22,7 +24,7 @@ var openUploadOverlay = function () {
   window.dialog.openModal();
   imgUploadOverlay.classList.remove('hidden');
 
-  hashtagsInput.addEventListener('input', validateTags);
+  hashtagsInput.addEventListener('input', window.formValidate.validateTags);
 
   document.addEventListener('keydown', onUploadOverlayEscPress);
 
@@ -45,7 +47,7 @@ var closeUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadInput.value = '';
 
-  hashtagsInput.removeEventListener('input', validateTags);
+  hashtagsInput.removeEventListener('input', window.formValidate.validateTags);
 
   document.removeEventListener('keydown', onUploadOverlayEscPress);
 
@@ -73,49 +75,3 @@ imgUploadInput.addEventListener('change', function () {
 imgUploadCancel.addEventListener('click', function () {
   closeUploadOverlay();
 });
-
-//  хэштеги
-var checksDuplicateTags = function (tags) {
-  var areThereDuplicateTags = false;
-
-  for (var i = 0; i < tags.length; i++) {
-    tags[i] = tags[i].toLowerCase();
-  }
-
-  for (var j = 0; j < tags.length - 1; j++) {
-    for (var k = j + 1; k < tags.length; k++) {
-      if (tags[j] === tags[k]) {
-        areThereDuplicateTags = true;
-      }
-    }
-  }
-
-  return areThereDuplicateTags;
-};
-
-var validateTags = function () {
-  var hashtagsText = hashtagsInput.value;
-  var hashtags = hashtagsText.split(' ');
-
-  for (var i = 0; i < hashtags.length; i++) {
-    var re = /^\#[а-яА-ЯёЁa-zA-Z0-9]+$/;
-    var hashtagLength = hashtags[i].length;
-
-    if (hashtags[i].charAt(0) !== '#') {
-      hashtagsInput.setCustomValidity('Тег должен начинаться со знака "#"');
-    } else if (hashtags[i] === '#') {
-      hashtagsInput.setCustomValidity('Хеш-тег не может состоять только из одной решётки');
-    } else if (!re.test(hashtags[i])) {
-      hashtagsInput.setCustomValidity('Текст после решётки должен состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.');
-    } else if (hashtagLength > window.constants.HASHTAG_MAX_LENGTH) {
-      hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов, удалите ' + (hashtagLength - window.constants.HASHTAG_MAX_LENGTH) + ' симв.');
-    } else if (checksDuplicateTags(hashtags)) {
-      hashtagsInput.setCustomValidity('Хеш-теги не должны повторяться. #ХэшТег и #хэштег считаются одним и тем же тегом');
-    } else if (hashtags.length > window.constants.MAX_NUM_OF_TAGS) {
-      hashtagsInput.setCustomValidity('Возможно ввести лишь 5 тегов');
-    } else {
-      hashtagsInput.setCustomValidity('');
-    }
-  }
-  imgUploadForm.reportValidity();
-};
