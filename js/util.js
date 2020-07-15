@@ -25,10 +25,3 @@
     getHtmlElement: getHtmlElement
   };
 })();
-
-/*
-'use strict';
-
-(function () {})();
-
-*/
