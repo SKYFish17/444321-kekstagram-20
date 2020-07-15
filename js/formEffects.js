@@ -33,6 +33,11 @@
     changeEffectLevel(window.constants.MAX_PIN_POSITION);
   };
 
+  var resetEffects = function () {
+    imgUploadPreview.classList = '';
+    imgUploadPreview.style.filter = '';
+  };
+
   var getFilter = function (effectType, effectMinLevel, effectMaxLevel, unit, pinPosition) {
     var effectLevel;
     var filter;
@@ -98,6 +103,7 @@
 
   window.formEffects = {
     onEffectsItemClick: onEffectsItemClick,
-    onEffectLevelPinMouseup: onEffectLevelPinMouseup
+    onEffectLevelPinMouseup: onEffectLevelPinMouseup,
+    resetEffects: resetEffects
   };
 })();

@@ -57,9 +57,10 @@
     scaleSmaller.removeEventListener('click', window.formScale.onScaleSmallerClick);
     scaleSmaller.removeEventListener('keydown', window.formScale.onScaleSmallerPressEnter);
     window.formScale.resetScaleValue();
-    effectsList.removeEventListener('change', window.formEffects.onEffectsItemClick, true);
 
+    effectsList.removeEventListener('change', window.formEffects.onEffectsItemClick, true);
     effectLevelPin.removeEventListener('mouseup', window.formEffects.onEffectLevelPinMouseup);
+    window.formEffects.resetEffects();
   };
 
   var onUploadOverlayEscPress = function (evt) {
