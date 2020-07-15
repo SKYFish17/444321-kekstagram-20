@@ -22,6 +22,10 @@
     }
   };
 
+  var resetScaleValue = function () {
+    imgUploadPreviewContainer.style.transform = 'scale' + '(' + 1 + ')';
+  };
+
   var onScaleBiggerClick = function () {
     if (scaleInput.value !== (window.constants.MAX_SCALE + '%')) {
       changeScaleValue('+');
@@ -54,6 +58,7 @@
     onScaleBiggerClick: onScaleBiggerClick,
     onScaleBiggerPressEnter: onScaleBiggerPressEnter,
     onScaleSmallerClick: onScaleSmallerClick,
-    onScaleSmallerPressEnter: onScaleSmallerPressEnter
+    onScaleSmallerPressEnter: onScaleSmallerPressEnter,
+    resetScaleValue: resetScaleValue
   };
 })();

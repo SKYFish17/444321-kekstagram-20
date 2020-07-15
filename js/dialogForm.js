@@ -56,6 +56,7 @@
 
     scaleSmaller.removeEventListener('click', window.formScale.onScaleSmallerClick);
     scaleSmaller.removeEventListener('keydown', window.formScale.onScaleSmallerPressEnter);
+    window.formScale.resetScaleValue();
     effectsList.removeEventListener('change', window.formEffects.onEffectsItemClick, true);
 
     effectLevelPin.removeEventListener('mouseup', window.formEffects.onEffectLevelPinMouseup);
