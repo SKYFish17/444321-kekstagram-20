@@ -27,7 +27,7 @@
 
   picturesContainer.addEventListener('click', function (evt) {
     //  доработать условие на проверку тега img
-    if (evt.target.attributes.src !== undefined) {
+    if (evt.target.tagName === 'IMG') {
       openBigPicture(evt.target.attributes.src.value);
     }
   }, true);
