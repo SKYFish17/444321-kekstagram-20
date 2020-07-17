@@ -11,7 +11,6 @@
   var effectLevelDepth = effectLevelContainer.querySelector('.effect-level__depth');
   var effectLevelValue = effectLevelContainer.querySelector('.effect-level__value');
 
-  var testPinPosition = 150;//  убрать после полной реализации обработки соб. слайдера
   var previousEffectName = '';
 
   var onEffectsItemClick = function (evt) {
@@ -30,7 +29,7 @@
 
     previousEffectName = effectName;
     imgUploadPreview.classList.add(effectName);
-    changeEffectLevel(window.constants.MAX_PIN_POSITION);
+    changeEffectLevel(window.constants.END_PIN_POSITION);
   };
 
   var resetEffects = function () {
@@ -43,7 +42,7 @@
     var filter;
     var effectLevelDifference = effectMaxLevel - effectMinLevel;
 
-    effectLevel = effectMinLevel + pinPosition / window.constants.MAX_PIN_POSITION * effectLevelDifference;
+    effectLevel = effectMinLevel + pinPosition / window.constants.END_PIN_POSITION * effectLevelDifference;
 
     if (unit !== 'none') {
       filter = effectType + '(' + effectLevel + unit + ')';
@@ -67,9 +66,9 @@
   };
 
   var renderActualEffectLevel = function (pinPosition) {
-    effectLevelPin.style.left = getRatio(pinPosition, window.constants.MAX_PIN_POSITION, '%');
-    effectLevelDepth.style.width = getRatio(pinPosition, window.constants.MAX_PIN_POSITION, '%');
-    effectLevelValue.value = getRatio(pinPosition, window.constants.MAX_PIN_POSITION);
+    effectLevelPin.style.left = getRatio(pinPosition, window.constants.END_PIN_POSITION, '%');
+    effectLevelDepth.style.width = getRatio(pinPosition, window.constants.END_PIN_POSITION, '%');
+    effectLevelValue.value = getRatio(pinPosition, window.constants.END_PIN_POSITION);
   };
 
   var changeEffectLevel = function (pinPosition) {
@@ -97,13 +96,44 @@
     renderActualEffectLevel(pinPosition);
   };
 
-  var onEffectLevelPinMouseup = function () {
-    changeEffectLevel(testPinPosition);
-  };
+  effectLevelPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX,
+    };
+
+    var onEffectLevelPinMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+      };
+
+      var pinPosition = effectLevelPin.offsetLeft - shift.x;
+
+      if (pinPosition >= window.constants.START_PIN_POSITION && pinPosition <= window.constants.END_PIN_POSITION) {
+        changeEffectLevel(pinPosition);
+      }
+    };
+
+    var onEffectLevelPinMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      effectLevelPin.removeEventListener('mousemove', onEffectLevelPinMouseMove);
+      effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseUp);
+    };
+
+    effectLevelPin.addEventListener('mousemove', onEffectLevelPinMouseMove);
+    effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseUp);
+  });
 
   window.formEffects = {
     onEffectsItemClick: onEffectsItemClick,
-    onEffectLevelPinMouseup: onEffectLevelPinMouseup,
     resetEffects: resetEffects
   };
 })();
