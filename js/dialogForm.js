@@ -13,8 +13,6 @@
   var effectsList = imgUploadOverlay.querySelector('.effects__list');
   var effectsPreviewNone = effectsList.querySelector('#effect-none');
   var effectSlider = imgUploadOverlay.querySelector('.effect-level');
-  var effectLevelContainer = imgUploadOverlay.querySelector('.effect-level');
-  var effectLevelPin = effectLevelContainer.querySelector('.effect-level__pin');
 
   var scaleContainer = imgUploadContainer.querySelector('.scale');
   var scaleSmaller = scaleContainer.querySelector('.scale__control--smaller');
@@ -34,8 +32,6 @@
     scaleSmaller.addEventListener('click', window.formScale.onScaleSmallerClick);
     scaleSmaller.addEventListener('keydown', window.formScale.onScaleSmallerPressEnter);
     effectsList.addEventListener('change', window.formEffects.onEffectsItemClick, true);
-
-    effectLevelPin.addEventListener('mouseup', window.formEffects.onEffectLevelPinMouseup);
 
     if (effectsPreviewNone.checked) {
       effectSlider.classList.add('hidden');
@@ -59,7 +55,6 @@
     window.formScale.resetScaleValue();
 
     effectsList.removeEventListener('change', window.formEffects.onEffectsItemClick, true);
-    effectLevelPin.removeEventListener('mouseup', window.formEffects.onEffectLevelPinMouseup);
     window.formEffects.resetEffects();
   };
 
