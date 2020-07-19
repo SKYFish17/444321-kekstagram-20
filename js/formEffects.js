@@ -97,14 +97,12 @@
   };
 
   effectLevelPin.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
 
     var startCoords = {
       x: evt.clientX,
     };
 
     var onEffectLevelPinMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
 
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -121,15 +119,14 @@
       }
     };
 
-    var onEffectLevelPinMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+    var onEffectLevelPinMouseUp = function () {
 
-      effectLevelPin.removeEventListener('mousemove', onEffectLevelPinMouseMove);
-      effectLevelPin.removeEventListener('mouseup', onEffectLevelPinMouseUp);
+      document.removeEventListener('mousemove', onEffectLevelPinMouseMove);
+      document.removeEventListener('mouseup', onEffectLevelPinMouseUp);
     };
 
-    effectLevelPin.addEventListener('mousemove', onEffectLevelPinMouseMove);
-    effectLevelPin.addEventListener('mouseup', onEffectLevelPinMouseUp);
+    document.addEventListener('mousemove', onEffectLevelPinMouseMove);
+    document.addEventListener('mouseup', onEffectLevelPinMouseUp);
   });
 
   window.formEffects = {
